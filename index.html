@@ -1553,7 +1553,7 @@
         },
         settings: {
             apiKey: '',
-            proxyUrl: 'https://actingtool.ferencsomogyi.workers.dev'
+            proxyUrl: 'https://actingtool.ferencsomogyi.workers.dev/v1/messages'
         },
         ui: {
             showSettings: false,
@@ -2365,7 +2365,7 @@ Antwoord in JSON formaat:
         const previousBeats = getCurrentMethodBeats()
             .filter(b => b.id < beat.id)
             .map(b => `${b.name}: ${getBeatContent(b.id) || '(nog leeg)'}`)
-            .join('\\n');
+            .join('\n');
 
         const prompt = `Je bent een expert scenarioschrijver. Help met de ${method.name} methode.
 
@@ -2388,7 +2388,7 @@ Geef 3 suggesties in JSON:
 
         try {
             const response = await callClaudeAPI(prompt);
-            const jsonMatch = response.match(/\\{[\\s\\S]*\\}/);
+            const jsonMatch = response.match(/\{[\s\S]*\}/);
             if (jsonMatch) {
                 const data = JSON.parse(jsonMatch[0]);
                 state.writer.suggestions = data.suggestions || [];
@@ -2406,7 +2406,7 @@ Geef 3 suggesties in JSON:
         const beats = getCurrentMethodBeats();
         const currentBeat = beats[state.writer.currentBeat];
         if (currentBeat) {
-            setBeatContent(currentBeat.id, `${suggestion.title}\\n\\n${suggestion.description}`);
+            setBeatContent(currentBeat.id, `${suggestion.title}\n\n${suggestion.description}`);
             state.writer.suggestions = [];
             render();
         }
@@ -3898,7 +3898,7 @@ Bekend van: ${master.works}`;
 
     function showRandomMasterTip() {
         const master = getRandomMasterTip();
-        alert(`💡 Tip van ${master.name}:\\n\\n"${master.tip}"\\n\\n🎯 Techniek: ${master.technique}\\n🎬 Bekend van: ${master.works}`);
+        alert(`💡 Tip van ${master.name}:\n\n"${master.tip}"\n\n🎯 Techniek: ${master.technique}\n🎬 Bekend van: ${master.works}`);
     }
 
     function render() {
