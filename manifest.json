@@ -1,0 +1,26 @@
+{
+  "name": "ScriptMaster Pro",
+  "short_name": "ScriptMaster",
+  "description": "AI-powered schrijfplatform voor scenarioschrijvers",
+  "start_url": "/scriptmaster-pro/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#f59e0b",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' rx='32' fill='%230f172a'/><text x='96' y='120' font-size='100' text-anchor='middle' fill='%23f59e0b'>🎬</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' rx='64' fill='%230f172a'/><text x='256' y='320' font-size='280' text-anchor='middle' fill='%23f59e0b'>🎬</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["productivity", "entertainment"],
+  "lang": "nl"
+}
