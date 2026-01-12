@@ -1825,8 +1825,21 @@
         for (let i = 1; i <= pdf.numPages; i++) {
             const page = await pdf.getPage(i);
             const content = await page.getTextContent();
-            const pageText = content.items.map(item => item.str).join(' ');
-            fullText += pageText + '\n';
+            
+            // Betere text reconstructie met newlines
+            let lastY = null;
+            let pageText = '';
+            
+            for (const item of content.items) {
+                // Check of we naar een nieuwe regel moeten
+                if (lastY !== null && Math.abs(item.transform[5] - lastY) > 5) {
+                    pageText += '\n';
+                }
+                pageText += item.str;
+                lastY = item.transform[5];
+            }
+            
+            fullText += pageText + '\n\n';
         }
         
         return fullText;
@@ -1835,7 +1848,12 @@
     // Extract text from DOCX using Mammoth
     async function extractTextFromDOCX(arrayBuffer) {
         const result = await mammoth.extractRawText({ arrayBuffer });
-        return result.value;
+        // Zorg voor proper newline formatting
+        let text = result.value;
+        // Vervang meerdere spaties met newline als het lijkt op scene headers
+        text = text.replace(/\s+(INT\.|EXT\.)/gi, '\n\n$1');
+        text = text.replace(/\s{3,}/g, '\n'); // 3+ spaties → newline
+        return text;
     }
 
     // Process uploaded file
@@ -1856,7 +1874,26 @@
                 throw new Error(`Unsupported file type: ${ext}`);
             }
 
+            // Debug: log extracted text length
+            console.log(`Extracted ${text.length} characters from ${file.name}`);
+            console.log('First 500 chars:', text.substring(0, 500));
+
             const script = parseScript(text, file.name);
+            
+            // Als geen scenes gevonden, sla raw text op als 1 "scene"
+            if (script.scenes.length === 0 && text.trim().length > 0) {
+                script.scenes.push({
+                    number: 1,
+                    header: 'VOLLEDIG SCRIPT',
+                    location: 'Onbekend',
+                    time: '',
+                    characters: [],
+                    dialogues: [],
+                    content: text.split('\n').slice(0, 100) // Eerste 100 regels
+                });
+                script.rawText = text; // Bewaar volledige tekst
+            }
+            
             state.scripts.push(script);
             rebuildIndexes();
             saveState();
